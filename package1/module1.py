@@ -111,19 +111,17 @@ def update_order(json_list, courier_list):
         pass
     else:
         my_dict["customer_phone"] = cust_phon
-
-    # how to approach 
+ 
     while True:
         try:
             print_list_with_index(courier_list)
             index = int(input("Enter index of the new courier"))
             
             if index in range(len(courier_list)):
-                print(range(courier_list))
                 my_dict["courier"] = courier_list[index]
                 break
             else:
                 print("Enter correct index number")    
         except ValueError:
             os.system("cls")
-            print("The input was not a number. Select option 0-5: ")
+            print("The input was not a number. Try again")
