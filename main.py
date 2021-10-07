@@ -1,6 +1,6 @@
 import os
-from pack1.module1 import *
-from pack1.module2 import *
+from package1.module1 import *
+from package1.module2 import *
 # create a function for opening the file and return a list and use that for both files
 
 product_list = []
