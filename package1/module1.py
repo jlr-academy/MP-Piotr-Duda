@@ -6,12 +6,26 @@ def add_item(list):
     new_item=input("Enter new name: ")
     is_duplicate = check_duplicates(list, new_item)
     if is_duplicate == True:
-        # Print out
         print(new_item.title() + " already exists.")
     else:
-        # Or add
         list.append(new_item.title())
         print(new_item.title() + " added to the list.")    
+
+# The below code has to be re-worked for unit testing. 
+
+# def add_item(list):
+#     os.system("cls")
+#     new_item=input("Enter new name: ")
+#     is_duplicate = check_duplicates(list, new_item)
+#     if is_duplicate == True:
+#         # Print out
+#         print(new_item.title() + " already exists.")
+#     else:
+#         # Or add
+#         #list.append(new_item.title())
+#         new_list = list.append(new_item.title())
+#         print(new_item.title() + " added to the list.")
+
 
 def update_list(list):
     os.system("cls")
@@ -74,13 +88,13 @@ def add_order(json_list, courier_list):
     
 
 def update_order_status(json_list):
-    
+    os.system("cls")
     print_list_with_index(json_list)
     index = int(input("Please enter index of the order to update status: "))
     my_dict = json_list[index]
     options = ["preparing", "awaiting shipment", "in transit", "delivered"]
-    
-    print("New status")
+    os.system("cls")
+    print("Available options:")
     print("0. preparing")
     print("1. awaiting shipment")
     print("2. in transit")
@@ -88,10 +102,16 @@ def update_order_status(json_list):
     
     index = int(input("Please enter index of the new status: "))
     my_dict["status"] = options[index]
+    status = my_dict["status"]
+    os.system("cls")
+    print(f"The status of the order has been updated to {status}")
 
 def update_order(json_list, courier_list):
+    os.system("cls")
     print_list_with_index(json_list)
     index = int(input("Please enter index of the order to be ammended: "))
+    
+    os.system("cls")
     my_dict = json_list[index]
     
     cust_name = str(input("Enter new customer name: "))
@@ -114,14 +134,18 @@ def update_order(json_list, courier_list):
  
     while True:
         try:
+            print("Available couriers:")
             print_list_with_index(courier_list)
-            index = int(input("Enter index of the new courier"))
+            index = int(input("Enter index of the new courier: "))
             
             if index in range(len(courier_list)):
                 my_dict["courier"] = courier_list[index]
                 break
             else:
-                print("Enter correct index number")    
+                print("Incorrect input. Enter index of the new courier: ")    
         except ValueError:
             os.system("cls")
-            print("The input was not a number. Try again")
+            print("Incorrect input. Enter index of the new courier: ")
+
+    os.system("cls")
+    print(f"The order has been updated - {my_dict}")
