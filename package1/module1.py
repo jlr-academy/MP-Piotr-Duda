@@ -1,5 +1,5 @@
 import os
-from .module2 import *
+from module2 import *
 
 def add_item(list):
     os.system("cls")
@@ -27,7 +27,7 @@ def add_item(list):
 #         print(new_item.title() + " added to the list.")
 
 
-def update_list(list):
+def update_list(list: list):
     os.system("cls")
     print("Index | Name")
     print_list_with_index(list)
@@ -41,7 +41,7 @@ def update_list(list):
     else:
         print("This index does not exist. Try again")
 
-def delete_item(list):
+def delete_item(list: list):
     os.system("cls")
     print("Index | Name")
     print_list_with_index(list)
@@ -66,7 +66,7 @@ def delete_item(list):
 
 
 
-def add_order(json_list, courier_list):
+def add_order(json_list:list, courier_list:list):
     os.system("cls")
     print_list_with_index(json_list)
 
@@ -99,7 +99,9 @@ def update_order_status(json_list):
     print("1. awaiting shipment")
     print("2. in transit")
     print("3. delivered")
-    
+
+
+   
     index = int(input("Please enter index of the new status: "))
     my_dict["status"] = options[index]
     status = my_dict["status"]
