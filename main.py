@@ -1,11 +1,12 @@
 import os
+#from os import system
 from package1.module1 import *
 from package1.module2 import *
 # create a function for opening the file and return a list and use that for both files
 
 product_list = []
 courier_list = []
-json_list = []
+orders_list = []
 
 
 def main_menu():
@@ -22,24 +23,24 @@ def main_menu():
         try:
             choice = int(input("Select option 0-3: "))
             if choice == 0:
-                save_files(product_list, courier_list, json_list)
+                save_files(product_list, courier_list, orders_list)
                 break
             elif choice == 1:
                 os.system("cls")
-                product_menu()
+                product_menu(product_list)
             elif choice == 2:
                 os.system("cls")
-                courier_menu()
+                courier_menu(courier_list)
             elif choice == 3:
                 os.system("cls")
-                orders_menu()
+                orders_menu(product_list, courier_list, orders_list)
             else:
                 print("Incorrect input. Select option 0-3: ")
         except ValueError:
             print("Incorrect input. Select option 0-3: ")
             
     
-def product_menu():
+def product_menu(product_list):
     while True:
         print("*****************************")
         print("PRODUCT MENU")
@@ -59,7 +60,7 @@ def product_menu():
             elif choice == 1:
                 # What happens with the clear command if you use this program on a mac?
                 os.system("cls")
-                print_list_with_index(product_list)
+                print(product_list)
             elif choice == 2:
                 add_item(product_list)
             elif choice == 3:
@@ -73,7 +74,7 @@ def product_menu():
             os.system("cls")
             print("The input was not a number. Select option 0/1/2/3/4: ")
 
-def courier_menu():
+def courier_menu(courier_list):
     while True:
         print("*****************************")
         print("COURIER MENU")
@@ -105,7 +106,7 @@ def courier_menu():
             os.system("cls")
             print("Incorrect input. Select option 0 - 4: ")
 
-def orders_menu():
+def orders_menu(product_list, courier_list, orders_list):
     while True:
         print("*****************************")
         print("ORDERS MENU")
@@ -124,21 +125,20 @@ def orders_menu():
                 os.system("cls")
                 break
             elif choice == 1:
-                print_list_with_index(json_list)
+                print_list_with_index(orders_list)
             elif choice == 2:
-                add_order(json_list, courier_list)
+                add_order(product_list, courier_list, orders_list)
             elif choice == 3:
-                update_order_status(json_list)
+                update_order_status(orders_list)
             elif choice == 4:            
-                update_order(json_list, courier_list)
+                update_order(product_list, courier_list, orders_list)
             elif choice == 5:
-                delete_item(json_list)
+                delete_item(orders_list)
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0-5: ")
         except ValueError:
             print("Incorrect input. Select option 0-5: ")
 
-load_files(product_list, courier_list, json_list)
-# print(json_list)
+load_files(product_list, courier_list, orders_list)
 main_menu()     

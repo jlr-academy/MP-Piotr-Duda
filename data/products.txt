@@ -1,2 +1,1 @@
-Fanta
-Coke Zero
+name,price

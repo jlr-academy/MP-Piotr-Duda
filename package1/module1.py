@@ -1,31 +1,24 @@
 import os
 from .module2 import *
 
+#to add additiona parameter in the add_item function 
+#to allow change field in a key in dictionary from price to phone
 def add_item(list):
     os.system("cls")
-    new_item=input("Enter new name: ")
-    is_duplicate = check_duplicates(list, new_item)
+    new_name=input("Enter name: ")
+    new_price=float(input("Enter price: "))
+    new_dict={
+        "name": new_name,
+        "price": new_price
+    }
+    is_duplicate = check_duplicates(list, new_name)
     if is_duplicate == True:
-        print(new_item.title() + " already exists.")
+        print(new_name.title() + " already exists.")
     else:
-        list.append(new_item.title())
-        print(new_item.title() + " added to the list.")    
-
-# The below code has to be re-worked for unit testing. 
-
-# def add_item(list):
-#     os.system("cls")
-#     new_item=input("Enter new name: ")
-#     is_duplicate = check_duplicates(list, new_item)
-#     if is_duplicate == True:
-#         # Print out
-#         print(new_item.title() + " already exists.")
-#     else:
-#         # Or add
-#         #list.append(new_item.title())
-#         new_list = list.append(new_item.title())
-#         print(new_item.title() + " added to the list.")
-
+        list.append(new_dict)
+        print(new_dict)
+        print(list)
+        print("added to the list.") 
 
 def update_list(list):
     os.system("cls")
@@ -64,34 +57,32 @@ def delete_item(list):
     except ValueError:
         print("The input was not a number. Select existing index number: ") 
 
-
-
-def add_order(json_list, courier_list):
+def add_order(product_list, courier_list, orders_list):
     os.system("cls")
-    print_list_with_index(json_list)
+    print_list_with_index(orders_list)
 
-    cust_dict = str(input("Enter customers name: "))
-    cust_addr_dict = str(input("Enter customers address: "))
-    cust_pho_dict = str(input("Enter customers phone number: "))
-    
-    print_list_with_index(courier_list)
-    index = int(input("Enter index number: "))
-    if courier_list[index] in courier_list:
-        cour_dict = courier_list[index]
-    else:
-        print("This index does not exist. Try again")
+    new_name = str(input("Enter customers name: "))
+    ### add fuction for input of the address in required format
+    new_address = str(input("Enter customers address: "))
+    new_phone = str(input("Enter customers phone number: "))
+    new_courier = choose_courier(courier_list)
+    items_list = add_product_index_to_list(product_list)
 
-    new_dictionary ={"customer_name" : cust_dict, "customer_address" : cust_addr_dict, "customer_phone" : cust_pho_dict, "courier" : cour_dict, "status" : "preparing" }
-    json_list.append(new_dictionary)
-    
-    
-    
+    new_dictionary = {
+        "customer_name": new_name.title(),
+        "customer_address": new_address,
+        "customer_phone": new_phone,
+        "courier": new_courier,
+        "status": "PREPARING",
+        "items": list(items_list)
+    }
+    orders_list.append(new_dictionary)
 
-def update_order_status(json_list):
+def update_order_status(orders_list):
     os.system("cls")
-    print_list_with_index(json_list)
+    print_list_with_index(orders_list)
     index = int(input("Please enter index of the order to update status: "))
-    my_dict = json_list[index]
+    my_dict = orders_list[index]
     options = ["preparing", "awaiting shipment", "in transit", "delivered"]
     os.system("cls")
     print("Available options:")
@@ -106,13 +97,13 @@ def update_order_status(json_list):
     os.system("cls")
     print(f"The status of the order has been updated to {status}")
 
-def update_order(json_list, courier_list):
+def update_order(product_list, courier_list, orders_list):
     os.system("cls")
-    print_list_with_index(json_list)
+    print_list_with_index(orders_list)
     index = int(input("Please enter index of the order to be ammended: "))
     
     os.system("cls")
-    my_dict = json_list[index]
+    my_dict = orders_list[index]
     
     cust_name = str(input("Enter new customer name: "))
     if cust_name == "":
@@ -132,20 +123,13 @@ def update_order(json_list, courier_list):
     else:
         my_dict["customer_phone"] = cust_phon
  
-    while True:
-        try:
-            print("Available couriers:")
-            print_list_with_index(courier_list)
-            index = int(input("Enter index of the new courier: "))
-            
-            if index in range(len(courier_list)):
-                my_dict["courier"] = courier_list[index]
-                break
-            else:
-                print("Incorrect input. Enter index of the new courier: ")    
-        except ValueError:
-            os.system("cls")
-            print("Incorrect input. Enter index of the new courier: ")
+    # add update asking if person wants to update courier and add below code to def
+    
+    my_dict["courier"] = choose_courier(courier_list)
+
+    # to pack the below white True look into def as common with code in add order
+    # also to add choice whether update asking if update is required
+    my_dict["items"] = add_product_index_to_list(product_list)
 
     os.system("cls")
     print(f"The order has been updated - {my_dict}")
