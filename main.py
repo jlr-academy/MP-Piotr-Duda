@@ -60,6 +60,8 @@ def product_menu(product_list):
             elif choice == 1:
                 # What happens with the clear command if you use this program on a mac?
                 os.system("cls")
+                #sorted_list = sorted(product_list, key=lambda item: item['name'])
+                #https://www.learnbyexample.org/python-sorted-function/
                 print(product_list)
             elif choice == 2:
                 add_item(product_list)

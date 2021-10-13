@@ -3,12 +3,13 @@ from .module2 import *
 
 #to add additiona parameter in the add_item function 
 #to allow change field in a key in dictionary from price to phone
+#to change new_price input for float when product to string when courier
 def add_item(list):
     os.system("cls")
     new_name=input("Enter name: ")
     new_price=float(input("Enter price: "))
     new_dict={
-        "name": new_name,
+        "name": new_name.title(),
         "price": new_price
     }
     is_duplicate = check_duplicates(list, new_name)
@@ -20,19 +21,27 @@ def add_item(list):
         print(list)
         print("added to the list.") 
 
+#to upgrade naming for input and key in dictionary for product and courier
 def update_list(list):
     os.system("cls")
     print("Index | Name")
     print_list_with_index(list)
     index = int(input("Enter index number: "))
-    if list[index] in list:
-        updated_item=str(input("Enter new name: "))
-        for item in range(0, len(list)):
-            if list[item] == list[index]:
-                print(list[index] + " has been updated to " + updated_item.title())
-                list[item] = updated_item.title()       
+
+    os.system("cls")
+    my_dict = list[index]
+    
+    cust_name = str(input("Enter new name: "))
+    if cust_name == "":
+        pass
     else:
-        print("This index does not exist. Try again")
+        my_dict["name"] = cust_name
+
+    cust_name = str(input("Enter phone number: "))
+    if cust_name == "":
+        pass
+    else:
+        my_dict["phone"] = cust_name
 
 def delete_item(list):
     os.system("cls")

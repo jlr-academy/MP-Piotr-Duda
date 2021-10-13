@@ -4,7 +4,7 @@ from typing import List
 
 def check_duplicates(list, new_item):
     for item in list:
-        if new_item.upper() == next(iter(item.values)).upper():
+        if new_item.upper() == next(iter(item.values())).upper():
             return True
     return False
 
