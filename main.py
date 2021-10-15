@@ -1,5 +1,4 @@
 import os
-#from os import system
 from package1.module1 import *
 from package1.module2 import *
 # create a function for opening the file and return a list and use that for both files
@@ -58,11 +57,8 @@ def product_menu(product_list):
             if choice == 0:
                 break
             elif choice == 1:
-                # What happens with the clear command if you use this program on a mac?
                 os.system("cls")
-                #sorted_list = sorted(product_list, key=lambda item: item['name'])
-                #https://www.learnbyexample.org/python-sorted-function/
-                print(product_list)
+                print_list_with_index(product_list)
             elif choice == 2:
                 add_item(product_list)
             elif choice == 3:
@@ -127,7 +123,9 @@ def orders_menu(product_list, courier_list, orders_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                print_list_with_index(orders_list)
+                sorted_list = print_list_sorted(orders_list)
+                for item in sorted_list:
+                    print(item)
             elif choice == 2:
                 add_order(product_list, courier_list, orders_list)
             elif choice == 3:

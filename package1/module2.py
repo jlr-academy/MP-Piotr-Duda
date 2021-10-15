@@ -12,6 +12,21 @@ def print_list_with_index(list: List):
     for item in range(len(list)):
         print(item, " - ", list[item])
 
+def print_list_sorted(list: List):
+    while True:
+        try:
+            index = int(input("Do you want sort list by courier - 0 or by status 1: "))
+            if index == 0:
+                sorted_list = sorted(list, key=lambda item: item['courier'])
+                return sorted_list
+            elif index == 1:
+                sorted_list = sorted(list, key=lambda item: item['status'])
+                return sorted_list
+            else:
+                print("Incorrect input. Enter 0 or 1")
+        except ValueError:
+            print("Incorrect input. Enter 0 or 1")  
+
 def choose_courier(courier_list):
     try:
         print_list_with_index(courier_list)

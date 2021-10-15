@@ -71,10 +71,10 @@ def add_order(product_list, courier_list, orders_list):
     print_list_with_index(orders_list)
 
     new_name = str(input("Enter customers name: "))
-    ### add fuction for input of the address in required format
+    ### TO DO: add fuction for input of the address in required format
     new_address = str(input("Enter customers address: "))
     new_phone = str(input("Enter customers phone number: "))
-    new_courier = choose_courier(courier_list)
+    new_courier = str(choose_courier(courier_list))
     items_list = add_product_index_to_list(product_list)
 
     new_dictionary = {
@@ -134,7 +134,7 @@ def update_order(product_list, courier_list, orders_list):
  
     # add update asking if person wants to update courier and add below code to def
     
-    my_dict["courier"] = choose_courier(courier_list)
+    my_dict["courier"] = str(choose_courier(courier_list))
 
     # to pack the below white True look into def as common with code in add order
     # also to add choice whether update asking if update is required
