@@ -1,14 +1,16 @@
 import os
 from package1.module1 import *
 from package1.module2 import *
-# create a function for opening the file and return a list and use that for both files
 
+# create a function for opening the file and return a list and use that for both files
+orders_list = []
 product_list = []
 courier_list = []
-orders_list = []
-
 
 def main_menu():
+
+    load_files(product_list, courier_list, orders_list)
+
     while True:
         print("*****************************")
         print("MAIN MENU")
@@ -58,13 +60,13 @@ def product_menu(product_list):
                 break
             elif choice == 1:
                 os.system("cls")
-                print_list_with_index(product_list)
+                print_db()
             elif choice == 2:
-                add_item(product_list)
+                add_item_to_db()
             elif choice == 3:
-                update_list(product_list)
+                update_item_in_db()
             elif choice == 4:
-                delete_item(product_list)
+                delete_item_from_db()
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0/1/2/3/4: ")
@@ -123,9 +125,10 @@ def orders_menu(product_list, courier_list, orders_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                sorted_list = print_list_sorted(orders_list)
-                for item in sorted_list:
-                    print(item)
+                # sorted_list = print_list_sorted(orders_list)
+                # for item in sorted_list:
+                #     print(item)
+                print(orders_list)
             elif choice == 2:
                 add_order(product_list, courier_list, orders_list)
             elif choice == 3:
@@ -140,5 +143,5 @@ def orders_menu(product_list, courier_list, orders_list):
         except ValueError:
             print("Incorrect input. Select option 0-5: ")
 
-load_files(product_list, courier_list, orders_list)
-main_menu()     
+if __name__ == "__main__":
+    main_menu()     
