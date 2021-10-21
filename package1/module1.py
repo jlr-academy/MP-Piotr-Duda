@@ -1,5 +1,9 @@
 import os
 from .module2 import *
+import pymysql
+from dotenv import load_dotenv
+
+
 
 #to add additiona parameter in the add_item function 
 #to allow change field in a key in dictionary from price to phone
@@ -19,7 +23,174 @@ def add_item(list):
         list.append(new_dict)
         print(new_dict)
         print(list)
-        print("added to the list.") 
+        print("added to the list.")
+
+
+
+
+def print_db(): 
+
+        # Load environment variables from .env file
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    # Establish a database connection
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT product_id, name, price, in_stock FROM products')
+
+    # Gets all rows from the result
+    rows = cursor.fetchall()
+    for row in rows:
+        print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, quantity: {row[3]}')
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+
+
+def add_item_to_db():
+    # Load environment variables from .env file
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    # Establish a database connection
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+
+    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
+    cursor = connection.cursor()
+
+    # Add code here to insert a new record
+    name=input("Enter name: ")
+
+    is_duplicate = check_duplicates_in_db(name, cursor)
+
+    if is_duplicate == True:
+        print(name.title() + " already exists.")
+    else:
+        price=float(input("Enter price: "))
+        in_stock=int(input("Enter number of items in stock: "))
+        sql = "INSERT INTO products (name, price, in_stock) VALUES (%s, %s, %s)"
+        val = (name, price, in_stock)
+        cursor.execute(sql, val)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+
+
+def update_item_in_db():
+    # Load environment variables from .env file
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    # Establish a database connection
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+
+    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
+    cursor = connection.cursor()
+
+    print_db()
+    product_id = int(input("Enter ID"))
+
+    cursor.execute('SELECT product_ID, name, price, in_stock FROM products')
+    rows = cursor.fetchall()
+    for row in rows:
+        if row[0] == product_id:
+            print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, quantity: {row[3]}')
+
+    prod_name = str(input("Enter new name: "))
+    if prod_name == "":
+        pass
+    else:
+        sql = f"UPDATE products SET name = '{prod_name}' WHERE product_id = {product_id}"
+        cursor.execute(sql)
+        connection.commit()
+
+    prod_price = float(input("Enter new price: "))
+    if prod_price == "":
+        pass
+    else:
+        sql = f"UPDATE products SET price = {prod_price} WHERE product_id = {product_id}"
+        cursor.execute(sql)
+        connection.commit()
+
+    prod_stock = int(input("Enter new stock: "))
+    if prod_stock == "":
+        pass
+    else:
+        sql = f"UPDATE products SET in_stock = {prod_stock} WHERE product_id = {product_id}"
+        cursor.execute(sql)
+        connection.commit()
+
+    cursor.close()
+    connection.close()
+
+
+
+
+def delete_item_from_db():
+    # Load environment variables from .env file
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    # Establish a database connection
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+
+    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
+    cursor = connection.cursor()
+
+    # Add code here to insert a new record
+    print_db()
+    id = int(input("Enter id: "))
+
+    sql = f"DELETE FROM products WHERE product_id = {id}"
+    cursor.execute(sql)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+
 
 #to upgrade naming for input and key in dictionary for product and courier
 def update_list(list):
@@ -42,6 +213,9 @@ def update_list(list):
         pass
     else:
         my_dict["phone"] = cust_name
+
+
+
 
 def delete_item(list):
     os.system("cls")
@@ -66,6 +240,9 @@ def delete_item(list):
     except ValueError:
         print("The input was not a number. Select existing index number: ") 
 
+
+
+
 def add_order(product_list, courier_list, orders_list):
     os.system("cls")
     print_list_with_index(orders_list)
@@ -87,6 +264,9 @@ def add_order(product_list, courier_list, orders_list):
     }
     orders_list.append(new_dictionary)
 
+
+
+
 def update_order_status(orders_list):
     os.system("cls")
     print_list_with_index(orders_list)
@@ -105,6 +285,9 @@ def update_order_status(orders_list):
     status = my_dict["status"]
     os.system("cls")
     print(f"The status of the order has been updated to {status}")
+
+
+
 
 def update_order(product_list, courier_list, orders_list):
     os.system("cls")
