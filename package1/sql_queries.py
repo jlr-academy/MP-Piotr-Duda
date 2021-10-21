@@ -1,0 +1,1 @@
+GET_PRODUCTS_QUERY = 'SELECT product_ID, name, price, in_stock FROM products'

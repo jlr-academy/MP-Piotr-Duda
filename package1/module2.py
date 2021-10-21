@@ -11,10 +11,23 @@ def check_duplicates(list, new_item):
             return True
     return False
 
-def check_duplicates_in_db(new_item, cursor):
+def check_product_duplicates_in_db(new_item, cursor):
 
     # Execute SQL query
     cursor.execute('SELECT name FROM products')
+
+    # Gets all rows from the result
+    rows = cursor.fetchall()
+
+    for row in rows:
+        if new_item.upper() == row[0].upper():
+            return True
+    return False
+
+def check_courier_duplicates_in_db(new_item, cursor):
+
+    # Execute SQL query
+    cursor.execute('SELECT name FROM couriers')
 
     # Gets all rows from the result
     rows = cursor.fetchall()
@@ -115,6 +128,22 @@ def save_files(product_list, courier_list, orders_list):
         writer = csv.DictWriter(csv_file, fieldnames=['customer_name', 'customer_address', 'customer_phone', 'courier', 'status', 'items'])
         writer.writeheader()
         writer.writerows(orders_list)
+
+def get_db_connection():
+    
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+    return connection
         
 def convert_from_string_to_float_for_key_in_dictionary(orders_list: List):
     new_order_list=[]
@@ -158,7 +187,7 @@ def sql_to_csv():
     cursor.close()
     connection.close()
 
-# def sql_to_csv():
+# def csv_to_sql_db():
     # # Load environment variables from .env file
     # load_dotenv()
     # host = os.environ.get("mysql_host")

@@ -28,10 +28,10 @@ def main_menu():
                 break
             elif choice == 1:
                 os.system("cls")
-                product_menu(product_list)
+                product_menu()
             elif choice == 2:
                 os.system("cls")
-                courier_menu(courier_list)
+                courier_menu()
             elif choice == 3:
                 os.system("cls")
                 orders_menu(product_list, courier_list, orders_list)
@@ -41,7 +41,7 @@ def main_menu():
             print("Incorrect input. Select option 0-3: ")
             
     
-def product_menu(product_list):
+def product_menu():
     while True:
         print("*****************************")
         print("PRODUCT MENU")
@@ -55,18 +55,18 @@ def product_menu(product_list):
 
 
         try:
-            choice = int(input("Select option 0/1/2/3/4:"))
+            choice = int(input("Select option 0/1/2/3/4: "))
             if choice == 0:
                 break
             elif choice == 1:
                 os.system("cls")
-                print_db()
+                print_product_db()
             elif choice == 2:
-                add_item_to_db()
+                add_product_to_db()
             elif choice == 3:
-                update_item_in_db()
+                update_product_in_db()
             elif choice == 4:
-                delete_item_from_db()
+                delete_product_from_db()
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0/1/2/3/4: ")
@@ -74,7 +74,7 @@ def product_menu(product_list):
             os.system("cls")
             print("The input was not a number. Select option 0/1/2/3/4: ")
 
-def courier_menu(courier_list):
+def courier_menu():
     while True:
         print("*****************************")
         print("COURIER MENU")
@@ -92,13 +92,13 @@ def courier_menu(courier_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                print_list_with_index(courier_list)
+                print_courier_db()
             elif choice == 2:
-                add_item(courier_list)
+                add_courier_to_db()
             elif choice == 3:
-                update_list(courier_list)
+                update_courier_in_db()
             elif choice == 4:
-                delete_item(courier_list)
+                delete_courier_from_db()
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0 - 4: ")
