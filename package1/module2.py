@@ -158,7 +158,7 @@ def sql_to_csv():
     cursor.close()
     connection.close()
 
-def sql_to_csv():
+# def sql_to_csv():
     # # Load environment variables from .env file
     # load_dotenv()
     # host = os.environ.get("mysql_host")
