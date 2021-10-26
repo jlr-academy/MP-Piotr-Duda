@@ -1,41 +1,16 @@
 import os
+
 from package1.input_func import input_person_name
 from .module2 import *
 from .sql_queries import *
 from .input_func import *
 
-#to add additiona parameter in the add_item function 
-#to allow change field in a key in dictionary from price to phone
-#to change new_price input for float when product to string when courier
-def add_item(list):
-    os.system("cls")
-    new_name=input("Enter name: ")
-    new_price=float(input("Enter price: "))
-    new_dict={
-        "name": new_name.title(),
-        "price": new_price
-    }
-    is_duplicate = check_duplicates(list, new_name)
-    if is_duplicate == True:
-        print(new_name.title() + " already exists.")
-    else:
-        list.append(new_dict)
-        print(new_dict)
-        print(list)
-        print("added to the list.")
-
 def add_product_to_db():
 
-    # Load environment variables, establish a database connection and cursor
-    
     connection = get_db_connection()
-
     cursor = connection.cursor()
 
-
-    # Check if product existing in database. If not, add to database
     name=input("Enter name: ")
-
     is_duplicate = check_product_duplicates_in_db(name, cursor)
 
     if is_duplicate == True:
@@ -54,13 +29,9 @@ def add_product_to_db():
 
 def add_courier_to_db():
 
-    # Load environment variables, establish a database connection and cursor
     connection = get_db_connection()
-
     cursor = connection.cursor()
 
-
-    # Check if product existing in database. If not, add to database
     name=input("Enter name: ")
 
     is_duplicate = check_courier_duplicates_in_db(name, cursor)
@@ -68,6 +39,7 @@ def add_courier_to_db():
     if is_duplicate == True:
         print(name.title() + " already exists.")
     else:
+        #to create support function to run below sql
         phone=int(input("Enter phone number: "))
         sql = "INSERT INTO couriers (name, phone) VALUES (%s, %s)"
         val = (name, phone)
@@ -80,14 +52,9 @@ def add_courier_to_db():
 
 def add_order_db():
 
-    # 1. inputs
-    #   - create choose_courier function for db
-    #   - to check if customer exists if yes to request id if not to add to list and choose after. 
-    # 2. add order_id & customer_id to orders
-    # 3. add order_id & list of products with quantitites to orderproducts
-
     os.system("cls")
 
+    #to create support function for 3 below entries
     customer_name = str(input("Enter name: "))
     customer_address = str(input("Enter customers address: "))
     customer_phone = str(input("Enter customers phone number: "))
@@ -102,18 +69,7 @@ def add_order_db():
         "customer_phone": customer_phone
     }
 
-    load_dotenv()
-    host = os.environ.get("mysql_host")
-    user = os.environ.get("mysql_user")
-    password = os.environ.get("mysql_pass")
-    database = os.environ.get("mysql_db")
-
-    connection = pymysql.connect(
-        host,
-        user,
-        password,
-        database
-        )
+    connection = get_db_connection()
     cursor = connection.cursor()
 
     sql = '''INSERT INTO customers (customer_name, customer_address, customer_phone) VALUES(%(customer_name)s,%(customer_address)s,%(customer_phone)s)'''
@@ -271,16 +227,10 @@ def update_order_status_in_db():
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    os.system("cls")
-    cursor.execute(GET_ORDER_QUERY)
-    rows = cursor.fetchall()
-    for row in rows:
-        if row[0] == order_id:
-            print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
+    print_order_by_id(order_id)
 
     options = ["preparing", "awaiting shipment", "in transit", "delivered"]
     
-    os.system("cls")
     print("Available options:")
     print("0. preparing")
     print("1. awaiting shipment")
@@ -298,7 +248,85 @@ def update_order_status_in_db():
 
     print("Product has been updated")
 
+def update_order_db():
 
+    os.system("cls")
+    print_order_db()
+    order_id = int(input("Enter ID"))
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    print_order_by_id(order_id)
+
+    sql = GET_CUSTOMERID_FOR_ORDER_QUERY
+    val = order_id
+    cursor.execute(sql, val)
+    row = cursor.fetchone()
+    customer_id = row[0]
+    
+    #UPDATE CUSTOMER NAME
+    customer_name = str(input("Enter new customer name: "))
+    if customer_name == "":
+        pass
+    else:
+        sql = f"UPDATE customers SET customer_name = '{customer_name}' WHERE customer_id = {customer_id}"
+        cursor.execute(sql)
+        connection.commit()
+    
+    #UPDATE CUSTOMER ADDRESS
+    customer_address = str(input("Enter new customer address: "))
+    if customer_name == "":
+        pass
+    else:
+        sql = f"UPDATE customers SET customer_address = '{customer_address}' WHERE customer_id = {customer_id}"
+        cursor.execute(sql)
+        connection.commit()
+
+    #UPDATE CUSTOMER PHONE NUMBER
+    while True:
+        customer_phone = input("Enter new phone number: ")
+        if int(customer_phone):
+            sql = f"UPDATE customers SET customer_phone = {customer_phone} WHERE customer_id = {customer_id}"
+            cursor.execute(sql)
+            connection.commit()
+            break
+        elif customer_phone == "":
+            break
+        else:
+            print("Incorrect input: number required")
+        
+    
+    #UPDATE COURIER
+
+    courier_id = choose_courier()
+    sql = f"UPDATE orders SET courier_id = '{courier_id}' WHERE order_id = {order_id}"
+    cursor.execute(sql)
+    connection.commit()
+
+    #UPDATE PRODUCTS
+
+    items_list = add_product_index_to_list()
+
+    prods_dict = {}
+    for item in items_list:
+        prods_dict[item] = prods_dict.get(item, 0) +1
+
+    # Transact order products
+    sql = "DELETE FROM order_products WHERE order_id = %s"
+    val = order_id
+    cursor.execute(sql, val)
+    connection.commit()
+
+    sql = "INSERT INTO order_products(order_id, product_id, quantity) VALUES(%s, %s, %s)"
+    sql_vals = [(order_id, key, value) for key, value in prods_dict.items()]
+    cursor.executemany(sql, sql_vals)
+    connection.commit()
+    
+    cursor.close()
+    connection.close()
+
+    print("Order has been updated")
 
 
 def delete_product_from_db():
@@ -346,7 +374,6 @@ def delete_order_from_db():
     print_order_db()
 
     connection = get_db_connection()
-
     cursor = connection.cursor()
 
     id = int(input("Enter id: "))
@@ -462,41 +489,6 @@ def update_order_status(orders_list):
 
 
 
-def update_order(product_list, courier_list, orders_list):
-    os.system("cls")
-    print_list_with_index(orders_list)
-    index = int(input("Please enter index of the order to be ammended: "))
-    
-    os.system("cls")
-    my_dict = orders_list[index]
-    
-    cust_name = str(input("Enter new customer name: "))
-    if cust_name == "":
-        pass
-    else:
-        my_dict["customer_name"] = cust_name
 
-    cust_addr = str(input("Enter new customer address: "))
-    if cust_addr == "":
-        pass
-    else:
-        my_dict["customer_address"] = cust_addr
-
-    cust_phon = str(input("Enter new customer phone number: "))
-    if cust_phon == "":
-        pass
-    else:
-        my_dict["customer_phone"] = cust_phon
- 
-    # add update asking if person wants to update courier and add below code to def
-    
-    my_dict["courier"] = str(choose_courier(courier_list))
-
-    # to pack the below white True look into def as common with code in add order
-    # also to add choice whether update asking if update is required
-    my_dict["items"] = add_product_index_to_list(product_list)
-
-    os.system("cls")
-    print(f"The order has been updated - {my_dict}")
 
 

@@ -140,7 +140,7 @@ def orders_menu(product_list, courier_list, orders_list):
             elif choice == 3:
                 update_order_status_in_db()
             elif choice == 4:            
-                update_order(product_list, courier_list, orders_list)
+                update_order_db()
             elif choice == 5:
                 delete_order_from_db()
             else:

@@ -58,6 +58,22 @@ def print_order_db():
     cursor.close()
     connection.close()
 
+def print_order_by_id(id):
+    os.system("cls")
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(GET_ORDER_QUERY)
+    rows = cursor.fetchall()
+
+    for row in rows:
+        if row[0] == id:
+            print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
+    
+    connection.commit()
+    cursor.close()
+    connection.close()
+
 def check_duplicates(list, new_item):
     for item in list:
         if new_item.upper() == next(iter(item.values())).upper():
@@ -66,27 +82,37 @@ def check_duplicates(list, new_item):
 
 def check_product_duplicates_in_db(new_item, cursor):
 
-    # Execute SQL query
+    connection = get_db_connection()
+    cursor = connection.cursor()
     cursor.execute('SELECT name FROM products')
 
     # Gets all rows from the result
     rows = cursor.fetchall()
 
     for row in rows:
-        if new_item.upper() == row[0].upper():
+        if new_item.upper() == row[1].upper():
+            connection.commit()
+            cursor.close()
+            connection.close()
             return True
     return False
 
+    
+
 def check_courier_duplicates_in_db(new_item, cursor):
 
-    # Execute SQL query
+    connection = get_db_connection()
+    cursor = connection.cursor()
     cursor.execute('SELECT name FROM couriers')
 
     # Gets all rows from the result
     rows = cursor.fetchall()
 
     for row in rows:
-        if new_item.upper() == row[0].upper():
+        if new_item.upper() == row[1].upper():
+            connection.commit()
+            cursor.close()
+            connection.close()
             return True
     return False
 
@@ -205,6 +231,7 @@ def get_db_connection():
         password,
         database
         )
+
     return connection
         
 def convert_from_string_to_float_for_key_in_dictionary(orders_list: List):
