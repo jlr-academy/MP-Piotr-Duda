@@ -4,7 +4,7 @@ from typing import List
 import ast
 import pymysql
 from dotenv import load_dotenv
-from sql_queries import *
+from .sql_queries import *
 
 def print_product_db(): 
 
@@ -45,7 +45,6 @@ def print_courier_db():
 def print_order_db(): 
 
     connection = get_db_connection()
-
     cursor = connection.cursor()
 
     cursor.execute(GET_ORDER_QUERY)
@@ -53,7 +52,7 @@ def print_order_db():
     # Gets all rows from the result
     rows = cursor.fetchall()
     for row in rows:
-        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+        print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
 
     connection.commit()
     cursor.close()

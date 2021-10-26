@@ -24,14 +24,6 @@ def add_item(list):
         print(list)
         print("added to the list.")
 
-
-
-
-
-
-
-
-
 def add_product_to_db():
 
     # Load environment variables, establish a database connection and cursor
@@ -86,7 +78,7 @@ def add_courier_to_db():
     cursor.close()
     connection.close()
 
-def add_order_db(product_list, courier_list, orders_list):
+def add_order_db():
 
     # 1. inputs
     #   - create choose_courier function for db
@@ -95,41 +87,75 @@ def add_order_db(product_list, courier_list, orders_list):
     # 3. add order_id & list of products with quantitites to orderproducts
 
     os.system("cls")
-    print_list_with_index(orders_list)
 
-    name = str(input_person_name())
-    new_address = str(input("Enter customers address: "))
-    new_phone = str(input("Enter customers phone number: "))
-    new_courier = choose_courier()
-    items_list = add_product_index_to_list(product_list)
+    customer_name = str(input("Enter name: "))
+    customer_address = str(input("Enter customers address: "))
+    customer_phone = str(input("Enter customers phone number: "))
+    courier_id = choose_courier()
+    items_list = add_product_index_to_list()
 
+    #INSERT INTO table customer
 
+    cust_dict = {
+        "customer_name": customer_name,
+        "customer_address": customer_address,
+        "customer_phone": customer_phone
+    }
+
+    load_dotenv()
+    host = os.environ.get("mysql_host")
+    user = os.environ.get("mysql_user")
+    password = os.environ.get("mysql_pass")
+    database = os.environ.get("mysql_db")
+
+    connection = pymysql.connect(
+        host,
+        user,
+        password,
+        database
+        )
+    cursor = connection.cursor()
+
+    sql = '''INSERT INTO customers (customer_name, customer_address, customer_phone) VALUES(%(customer_name)s,%(customer_address)s,%(customer_phone)s)'''
+    cursor.execute(sql, cust_dict)
+
+    connection.commit()
+
+    customer_id = cursor.lastrowid
+    print(customer_id)
+
+    #INSERT INTO table customer
 
     order_dict = {
-        "customer_name": name.title(),
-        "customer_address": new_address,
-        "customer_phone": new_phone,
-        "courier": new_courier,
+        "customer_id": customer_id,
+        "courier_id": courier_id,
         "status": "PREPARING"
     }
 
-    sql = '''INSERT INTO orders (customer_name, custo'''
-
+    sql = "INSERT INTO orders(customer_id, courier_id, status) VALUES(%(customer_id)s, %(courier_id)s, %(status)s)"
     cursor.execute(sql, order_dict)
 
+    connection.commit()
 
+    order_id = cursor.lastrowid
 
-    shopping_cart_dict = {}
+    print(order_id)
+
+    #INSERT INTO table order/products
+
+    prods_dict = {}
     for item in items_list:
-        shopping_cart_dict[item] = shopping_cart_dict.get(item, 0) +1
+        prods_dict[item] = prods_dict.get(item, 0) +1
 
-    
-    
     # Transact order products
-    sql = "INSERT INTO order_products(OrderID, ProductID, Quantity) VALUES(%s, %s, %s)"
-    vals = [(order_id, key, value) for key, value in shopping_cart_dict.items()]
-    cursor.execute(sql, vals)
+    sql = "INSERT INTO order_products(order_id, product_id, quantity) VALUES(%s, %s, %s)"
+    sql_vals = [(order_id, key, value) for key, value in prods_dict.items()]
+    cursor.executemany(sql, sql_vals)
 
+    connection.commit()
+
+    cursor.close()
+    connection.close()
 
 def update_product_in_db():
     
@@ -236,6 +262,42 @@ def update_courier_in_db():
 
     print("Product has been updated")
 
+def update_order_status_in_db():
+
+    os.system("cls")
+    print_order_db()
+    order_id = int(input("Enter ID"))
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    os.system("cls")
+    cursor.execute(GET_ORDER_QUERY)
+    rows = cursor.fetchall()
+    for row in rows:
+        if row[0] == order_id:
+            print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
+
+    options = ["preparing", "awaiting shipment", "in transit", "delivered"]
+    
+    os.system("cls")
+    print("Available options:")
+    print("0. preparing")
+    print("1. awaiting shipment")
+    print("2. in transit")
+    print("3. delivered")
+    index = int(input("Please enter index of the new status: "))
+    status = options[index]
+    
+    sql = f"UPDATE orders SET status = '{status}' WHERE order_id = {order_id}"
+    cursor.execute(sql)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    print("Product has been updated")
+
 
 
 
@@ -270,6 +332,29 @@ def delete_courier_from_db():
     id = int(input("Enter id: "))
 
     sql = f"DELETE FROM couriers WHERE courier_id = {id}"
+    cursor.execute(sql)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+    
+    print("Product has been deleted")
+
+def delete_order_from_db():
+
+    os.system("cls")
+    print_order_db()
+
+    connection = get_db_connection()
+
+    cursor = connection.cursor()
+
+    id = int(input("Enter id: "))
+
+    sql = f"DELETE FROM order_products WHERE order_id = {id}"
+    cursor.execute(sql)
+    
+    sql = f"DELETE FROM orders WHERE order_id = {id}"
     cursor.execute(sql)
 
     connection.commit()
@@ -317,14 +402,14 @@ def delete_item(list):
             print("0. No")
             print("1. Yes")
             try:
-            choice = int(input("choose 0/1: "))
-            if choice == 0:
-                print("The item has not been removed")
-            elif choice == 1:
-                print("The order has been deleted")
-                list.remove(list[index])
-                return list    
-            else:
+                choice = int(input("choose 0/1: "))
+                if choice == 0:
+                    print("The item has not been removed")
+                elif choice == 1:
+                    print("The order has been deleted")
+                    list.remove(list[index])
+                    return list    
+            except:
                 print("This index does not exist. Try again")
         else:
             print("This index does not exists. Select existing index number:") 

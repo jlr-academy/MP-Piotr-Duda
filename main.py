@@ -134,18 +134,15 @@ def orders_menu(product_list, courier_list, orders_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                # sorted_list = print_list_sorted(orders_list)
-                # for item in sorted_list:
-                #     print(item)
-                print(orders_list)
+                print_order_db()
             elif choice == 2:
-                add_order(product_list, courier_list, orders_list)
+                add_order_db()
             elif choice == 3:
-                update_order_status(orders_list)
+                update_order_status_in_db()
             elif choice == 4:            
                 update_order(product_list, courier_list, orders_list)
             elif choice == 5:
-                delete_item(orders_list)
+                delete_order_from_db()
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0-5: ")

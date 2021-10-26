@@ -1,4 +1,4 @@
 GET_PRODUCTS_QUERY = 'SELECT product_ID, name, price, in_stock FROM products'
 GET_COURIER_QUERY = 'SELECT courier_ID, name, phone FROM couriers'
-GET_ORDER_QUERY = 'SELECT order_ID, customer_name, customer_address, customer phone, courier, status, items FROM orders'
 SELECT_PRODUCTS_MATCHING_ID_QUERY = 'SELECT product_id, COUNT(*) FROM products WHERE product_id = %s'
+GET_ORDER_QUERY = 'SELECT orders.order_id, customers.customer_name, couriers.name, orders.status, SUM(order_products.quantity) AS items FROM orders LEFT JOIN customers ON orders.customer_id = customers.customer_id LEFT JOIN couriers ON orders.courier_id = couriers.courier_id LEFT JOIN order_products ON orders.order_id = order_products.order_id GROUP by orders.order_id;'
