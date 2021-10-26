@@ -52,14 +52,13 @@ def print_order_db():
     # Gets all rows from the result
     rows = cursor.fetchall()
     for row in rows:
-        print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
+        print(f'order_id: {row[0]} |customer: {row[1]}, {row[2]}, {row[3]} | courier: {row[4]} | status: {row[5]} | items: {row[6]}')
 
     connection.commit()
     cursor.close()
     connection.close()
 
 def print_order_by_id(id):
-    os.system("cls")
     connection = get_db_connection()
     cursor = connection.cursor()
 
@@ -68,11 +67,26 @@ def print_order_by_id(id):
 
     for row in rows:
         if row[0] == id:
-            print(f'order_id: {row[0]}, customer: {row[1]}, courier: {row[2]}, status: {row[3]}, items: {row[4]}')
+            print(f'order_id: {row[0]} |customer: {row[1]}, {row[2]}, {row[3]} | courier: {row[4]} | status: {row[5]} | items: {row[6]}')
     
     connection.commit()
     cursor.close()
     connection.close()
+
+def print_list_products_by_id(id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(GET_ORDER_PRODUCTS_QUERY, id)
+    rows = cursor.fetchall()
+
+    for row in rows:
+        print(f'product id: {row[0]} | product name: {row[1]} | quantity: {row[2]}')
+    
+    connection.commit()
+    cursor.close()
+    connection.close()
+    
 
 def check_duplicates(list, new_item):
     for item in list:

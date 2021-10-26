@@ -115,6 +115,7 @@ def courier_menu():
 
 def orders_menu(product_list, courier_list, orders_list):
     while True:
+        os.system("cls")
         print('''
         *****************************
         ORDERS MENU
@@ -134,7 +135,7 @@ def orders_menu(product_list, courier_list, orders_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                print_order_db()
+                print_order_func()
             elif choice == 2:
                 add_order_db()
             elif choice == 3:

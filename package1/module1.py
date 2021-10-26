@@ -108,7 +108,12 @@ def add_order_db():
     sql_vals = [(order_id, key, value) for key, value in prods_dict.items()]
     cursor.executemany(sql, sql_vals)
 
-    connection.commit()
+    ### HOW TO GET QUANTITIES ADDED REMOVED FROM INVENTORY
+
+    # sql = "UPDATE products SET quantity = %s WHERE product_id = %s"
+    # sql_vals = [(key, value) for key, value in prods_dict.items()]
+
+    # connection.commit()
 
     cursor.close()
     connection.close()
@@ -486,7 +491,19 @@ def update_order_status(orders_list):
     os.system("cls")
     print(f"The status of the order has been updated to {status}")
 
-
+def print_order_func():
+    os.system("cls")
+    print_order_db()
+    choice = input("Press 'y' if you want to see more details?")
+    if choice == "y":
+        id_choice = int(input("Enter id number of the order you want to view"))
+        os.system("cls")
+        print_order_by_id(id_choice)
+        print("------")
+        print_list_products_by_id(id_choice)
+        os.system("pause")
+    else: 
+        pass
 
 
 
