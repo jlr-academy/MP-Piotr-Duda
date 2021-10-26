@@ -4,6 +4,60 @@ from typing import List
 import ast
 import pymysql
 from dotenv import load_dotenv
+from sql_queries import *
+
+def print_product_db(): 
+
+    connection = get_db_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute(GET_PRODUCTS_QUERY)
+
+    # Gets all rows from the result
+    rows = cursor.fetchall()
+    for row in rows:
+        print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, quantity: {row[3]}')
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+def print_courier_db(): 
+
+    connection = get_db_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute(GET_COURIER_QUERY)
+
+    # Gets all rows from the result
+    rows = cursor.fetchall()
+    for row in rows:
+        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+# to be re-done requires join tables order/customer/orderproducts
+# GET_ORDER_QUERY requires update and print statement
+def print_order_db(): 
+
+    connection = get_db_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute(GET_ORDER_QUERY)
+
+    # Gets all rows from the result
+    rows = cursor.fetchall()
+    for row in rows:
+        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+
+    connection.commit()
+    cursor.close()
+    connection.close()
 
 def check_duplicates(list, new_item):
     for item in list:
@@ -37,7 +91,13 @@ def check_courier_duplicates_in_db(new_item, cursor):
             return True
     return False
 
-
+def check_id_exists_db(id_number):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    if cursor.execute('select * from products where product_id = %s', (id_number)):
+        print("exists")
+    else:
+        print("doesn't exists")
 
 def print_list_with_index(list: List):
     for item in range(len(list)):
@@ -58,20 +118,23 @@ def print_list_sorted(list: List):
         except ValueError:
             print("Incorrect input. Enter 0 or 1")  
 
-def choose_courier(courier_list):
-    try:
-        print_list_with_index(courier_list)
-        index = int(input("Enter index number: "))
-        if courier_list[index] in courier_list:
-            new_courier = index
-            return new_courier
-        else:
-            print("This index does not exist. Try again")
-    except ValueError:
-        os.system("cls")
-        print("Incorrect input. Enter index of the new courier: ")
+def choose_courier():
+    print_courier_db()
+    while True:
+        try:
+            id_number = int(input("Enter id number: "))
 
-def add_product_index_to_list(product_list):
+            connection = get_db_connection()
+            cursor = connection.cursor()     
+
+            if cursor.execute('select * from couriers where courier_id = %s', (id_number)):
+                return id_number
+            else:
+                print("Incorrect input: ID does not exist")
+        except ValueError:
+            print("Incorrect input. Enter index of the new courier: ")
+
+def add_product_index_to_list():
     items_list = []
     while True:
         try:
@@ -81,12 +144,12 @@ def add_product_index_to_list(product_list):
                 return items_list
                 #break
             elif choice == 1:
-                print_list_with_index(product_list)
-                index = int(input("Enter index number: "))
-                if product_list[index] in product_list:
-                    new_index = index
-                    items_list.append(new_index)
-                    print(items_list)
+                print_product_db()
+                connection = get_db_connection()
+                cursor = connection.cursor() 
+                id_number = int(input("Enter index number: "))
+                if cursor.execute('select * from products where product_id = %s', (id_number)):
+                    items_list.append(id_number)
                 else:
                     print("This index doesn not exists. Try again: ")
         except:
@@ -187,6 +250,8 @@ def sql_to_csv():
     cursor.close()
     connection.close()
 
+# sql_to_csv()    
+
 # def csv_to_sql_db():
     # # Load environment variables from .env file
     # load_dotenv()
@@ -218,3 +283,8 @@ def sql_to_csv():
     # connection.commit
     # cursor.close()
     # connection.close()
+
+# # Transact order products
+# sql_query = "INSERT INTO order_products(OrderID, ProductID, Quantity) VALUES(%s, %s, %s)"
+# sql_vals =  vals = [(order_id, key, value) for key, value in shopping_cart_dict.items()]
+# utils.db_transact(sql_query, sql_vals, False, True)

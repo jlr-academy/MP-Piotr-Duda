@@ -12,14 +12,17 @@ def main_menu():
     load_files(product_list, courier_list, orders_list)
 
     while True:
-        print("*****************************")
-        print("MAIN MENU")
-        print("*****************************")
-        print("0. Exit")
-        print("1. Product menu")
-        print("2. Courier menu")
-        print("3. Orders menu")
-        print("*****************************")
+        os.system("cls")
+        print('''
+        *****************************
+        MAIN MENU
+        *****************************
+        0. Exit
+        1. Product menu
+        2. Courier menu
+        3. Orders menu
+        *****************************
+        ''')
 
         try:
             choice = int(input("Select option 0-3: "))
@@ -43,15 +46,17 @@ def main_menu():
     
 def product_menu():
     while True:
-        print("*****************************")
-        print("PRODUCT MENU")
-        print("*****************************")
-        print("0. Return to main menu")
-        print("1. Print products list")
-        print("2. Create new product")
-        print("3. Update existing product")
-        print("4. Delete product")
-        print("*****************************")
+        print('''
+        *****************************
+        PRODUCT MENU
+        *****************************
+        0. Return to main menu
+        1. Print products list
+        2. Create new product
+        3. Update existing product
+        4. Delete product
+        *****************************
+        ''')
 
 
         try:
@@ -76,15 +81,17 @@ def product_menu():
 
 def courier_menu():
     while True:
-        print("*****************************")
-        print("COURIER MENU")
-        print("*****************************")
-        print("0. Return to main menu")
-        print("1. Print courier list")
-        print("2. Create new courier")
-        print("3. Update existing courier")
-        print("4. Delete courier")
-        print("*****************************")
+        print('''
+        *****************************
+        COURIER MENU
+        *****************************
+        0. Return to main menu
+        1. Print courier list
+        2. Create new courier
+        3. Update existing courier
+        4. Delete courier
+        *****************************
+        ''')
 
         try:
             choice = int(input("Select option 0 - 4: "))
@@ -108,16 +115,18 @@ def courier_menu():
 
 def orders_menu(product_list, courier_list, orders_list):
     while True:
-        print("*****************************")
-        print("ORDERS MENU")
-        print("*****************************")
-        print("0. Return to main menu")
-        print("1. Print orders")
-        print("2. Create new order")
-        print("3. Update order status")
-        print("4. Update order details")
-        print("5. Delete order")
-        print("*****************************")
+        print('''
+        *****************************
+        ORDERS MENU
+        *****************************
+        0. Return to main menu
+        1. Print orders
+        2. Create new order
+        3. Update order status
+        4. Update order details
+        5. Delete order
+        *****************************
+        ''')
 
         try:
             choice = int(input("Select option 0-5: "))

@@ -1,6 +1,8 @@
 import os
+from package1.input_func import input_person_name
 from .module2 import *
 from .sql_queries import *
+from .input_func import *
 
 #to add additiona parameter in the add_item function 
 #to allow change field in a key in dictionary from price to phone
@@ -25,39 +27,7 @@ def add_item(list):
 
 
 
-def print_product_db(): 
 
-    connection = get_db_connection()
-
-    cursor = connection.cursor()
-
-    cursor.execute('SELECT product_id, name, price, in_stock FROM products')
-
-    # Gets all rows from the result
-    rows = cursor.fetchall()
-    for row in rows:
-        print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, quantity: {row[3]}')
-
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-def print_courier_db(): 
-
-    connection = get_db_connection()
-
-    cursor = connection.cursor()
-
-    cursor.execute('SELECT courier_id, name, phone FROM couriers')
-
-    # Gets all rows from the result
-    rows = cursor.fetchall()
-    for row in rows:
-        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
-
-    connection.commit()
-    cursor.close()
-    connection.close()
 
 
 
@@ -90,32 +60,6 @@ def add_product_to_db():
     cursor.close()
     connection.close()
 
-# def execute_db_command(function_to_execute):
-
-#     # Load environment variables, establish a database connection and cursor
-#     load_dotenv()
-#     host = os.environ.get("mysql_host")
-#     user = os.environ.get("mysql_user")
-#     password = os.environ.get("mysql_pass")
-#     database = os.environ.get("mysql_db")
-
-#     connection = pymysql.connect(
-#         host,
-#         user,
-#         password,
-#         database
-#         )
-
-#     cursor = connection.cursor()
-
-#     function_to_execute(connection, cursor)
-    
-#     #Close cursor and connection
-#     cursor.close()
-#     connection.close()
-
-
-
 def add_courier_to_db():
 
     # Load environment variables, establish a database connection and cursor
@@ -142,19 +86,61 @@ def add_courier_to_db():
     cursor.close()
     connection.close()
 
+def add_order_db(product_list, courier_list, orders_list):
 
+    # 1. inputs
+    #   - create choose_courier function for db
+    #   - to check if customer exists if yes to request id if not to add to list and choose after. 
+    # 2. add order_id & customer_id to orders
+    # 3. add order_id & list of products with quantitites to orderproducts
+
+    os.system("cls")
+    print_list_with_index(orders_list)
+
+    name = str(input_person_name())
+    new_address = str(input("Enter customers address: "))
+    new_phone = str(input("Enter customers phone number: "))
+    new_courier = choose_courier()
+    items_list = add_product_index_to_list(product_list)
+
+
+
+    order_dict = {
+        "customer_name": name.title(),
+        "customer_address": new_address,
+        "customer_phone": new_phone,
+        "courier": new_courier,
+        "status": "PREPARING"
+    }
+
+    sql = '''INSERT INTO orders (customer_name, custo'''
+
+    cursor.execute(sql, order_dict)
+
+
+
+    shopping_cart_dict = {}
+    for item in items_list:
+        shopping_cart_dict[item] = shopping_cart_dict.get(item, 0) +1
+
+    
+    
+    # Transact order products
+    sql = "INSERT INTO order_products(OrderID, ProductID, Quantity) VALUES(%s, %s, %s)"
+    vals = [(order_id, key, value) for key, value in shopping_cart_dict.items()]
+    cursor.execute(sql, vals)
 
 
 def update_product_in_db():
-    # Load environment variables from .env file
-    connection = get_db_connection()
-
-    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
-    cursor = connection.cursor()
-
+    
+    os.system("cls")
     print_product_db()
     product_id = int(input("Enter ID"))
 
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    os.system("cls")
     cursor.execute(GET_PRODUCTS_QUERY)
     rows = cursor.fetchall()
     for row in rows:
@@ -199,21 +185,23 @@ def update_product_in_db():
             else:
                 print(ValueError('Incorect input. Enter integer for a new quantity in stock or leave empty if the quantity stays the same: '))
                 pass
-
+    
     cursor.close()
     connection.close()
 
+    print("Product has been updated")
+
 def update_courier_in_db():
-    # Load environment variables from .env file
-    connection = get_db_connection()
 
-    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
-    cursor = connection.cursor()
-
+    os.system("cls")
     print_courier_db()
     courier_id = int(input("Enter ID"))
 
-    cursor.execute('SELECT courier_ID, name, phone FROM couriers')
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    os.system("cls")
+    cursor.execute(GET_COURIER_QUERY)
     rows = cursor.fetchall()
     for row in rows:
         if row[0] == courier_id:
@@ -246,19 +234,20 @@ def update_courier_in_db():
     cursor.close()
     connection.close()
 
+    print("Product has been updated")
+
 
 
 
 def delete_product_from_db():
-    # Load environment variables from .env file
-    connection = get_db_connection()
 
-    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
-    cursor = connection.cursor()
+    os.system("cls")
 
-    # Add code here to insert a new record
     print_product_db()
     id = int(input("Enter id: "))
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
 
     sql = f"DELETE FROM products WHERE product_id = {id}"
     cursor.execute(sql)
@@ -267,15 +256,17 @@ def delete_product_from_db():
     cursor.close()
     connection.close()
 
+    print("Product has been deleted")
+
 def delete_courier_from_db():
-    # Load environment variables from .env file
+
+    os.system("cls")
+    print_courier_db()
+
     connection = get_db_connection()
 
-    # A cursor is an object that represents a DB cursor, which is used to manage the context of a fetch operation.
     cursor = connection.cursor()
 
-    # Add code here to insert a new record
-    print_courier_db()
     id = int(input("Enter id: "))
 
     sql = f"DELETE FROM couriers WHERE courier_id = {id}"
@@ -284,6 +275,8 @@ def delete_courier_from_db():
     connection.commit()
     cursor.close()
     connection.close()
+    
+    print("Product has been deleted")
 
 
 
@@ -323,12 +316,14 @@ def delete_item(list):
             print("Are you sure you want delete item: ", list[index])
             print("0. No")
             print("1. Yes")
+            try:
             choice = int(input("choose 0/1: "))
             if choice == 0:
                 print("The item has not been removed")
             elif choice == 1:
                 print("The order has been deleted")
-                list.remove(list[index])    
+                list.remove(list[index])
+                return list    
             else:
                 print("This index does not exist. Try again")
         else:
@@ -343,15 +338,14 @@ def add_order(product_list, courier_list, orders_list):
     os.system("cls")
     print_list_with_index(orders_list)
 
-    new_name = str(input("Enter customers name: "))
-    ### TO DO: add fuction for input of the address in required format
+    name = str(input_person_name())
     new_address = str(input("Enter customers address: "))
     new_phone = str(input("Enter customers phone number: "))
     new_courier = str(choose_courier(courier_list))
     items_list = add_product_index_to_list(product_list)
 
     new_dictionary = {
-        "customer_name": new_name.title(),
+        "customer_name": name.title(),
         "customer_address": new_address,
         "customer_phone": new_phone,
         "courier": new_courier,
@@ -359,8 +353,6 @@ def add_order(product_list, courier_list, orders_list):
         "items": list(items_list)
     }
     orders_list.append(new_dictionary)
-
-
 
 
 def update_order_status(orders_list):
@@ -421,3 +413,5 @@ def update_order(product_list, courier_list, orders_list):
 
     os.system("cls")
     print(f"The order has been updated - {my_dict}")
+
+
