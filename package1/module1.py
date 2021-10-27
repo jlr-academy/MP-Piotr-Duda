@@ -76,9 +76,16 @@ def delete_product_from_db():
 
     id = int(input("Enter id: "))
 
-    sql_execute(DELETE_PRODUCT_QUERY, id)
+    sql = "SELECT product_id FROM order_products WHERE product_id=%s"
+    data_check = sql_read(sql, id)
+    if data_check:
+        print("The product cannot be removed. First delete orders containing this product and try again.")
+    else:
+        sql_execute(DELETE_PRODUCT_QUERY, id)
+        print("Product has been deleted")
+    
 
-    print("Product has been deleted")
+    
 
 
 
@@ -137,9 +144,15 @@ def delete_courier_from_db():
 
     id = int(input("Enter id: "))
 
-    sql_execute(DELETE_COURIER_QUERY, id)
+    sql = "SELECT courier_id FROM orders WHERE courier_id=%s"
+    data_check = sql_read(sql, id)
+    if data_check:
+        print("The courier cannot be removed. First delete orders assigned to this courier and try again.")
+    else:
+        sql_execute(DELETE_COURIER_QUERY, id)
+        print("Courier has been deleted")
+
     
-    print("Courier has been deleted")
 
 
 
@@ -156,7 +169,6 @@ def print_orders_func():
         print_order_by_id(id_choice)
         print("------")
         print_list_products_by_id(id_choice)
-        os.system("pause")
     else: 
         pass
 
@@ -185,6 +197,8 @@ def add_order_db():
     add_product_to_order(order_id)
 
     print("Order has been created.")
+
+
 
 def update_order_status_in_db():
 
@@ -259,8 +273,42 @@ def delete_order_from_db():
 
 #CUSTOMERS
 
+def add_customer_db():
 
+    os.system("cls")
 
+    #to create support function for 3 below entries
+    customer_name = str(input("Enter name: "))
+    customer_address = str(input("Enter customers address: "))
+    customer_phone = str(input("Enter customers phone number: "))
+    
+    val = (customer_name, customer_address, customer_phone)
+    sql_execute_and_return_last_row_id(ADD_CUSTOMER_QUERY, val)
+
+    print("Customer has been created.")
+
+def update_customer_in_db():
+    print_customers_db()
+    customer_id = int(input("Enter ID: "))
+    update_customer_name(customer_id)
+    update_customer_address(customer_id)
+    update_customer_phone(customer_id)
+
+    print("Customer has been updated.")
+
+def delete_customer_from_db():
+    #TO DO: input validation is required
+    os.system("cls")
+    print_customers_db()
+    id = int(input("Enter id: "))
+
+    sql = "SELECT customer_id FROM orders WHERE customer_id=%s"
+    data_check = sql_read(sql, id)
+    if data_check:
+        print("The customer cannot be removed. First delete orders from this customer and try again.")
+    else:
+        sql_execute(DELETE_CUSTOMER_QUERY, id)
+        print("The customer has been deleted.")
 
 
 

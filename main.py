@@ -16,6 +16,7 @@ def main_menu():
         1. Product menu
         2. Courier menu
         3. Orders menu
+        4. Customer menu
         *****************************
         ''')
 
@@ -32,6 +33,9 @@ def main_menu():
             elif choice == 3:
                 os.system("cls")
                 orders_menu()
+            elif choice == 4:
+                os.system("cls")
+                customer_menu()
             else:
                 print("Incorrect input. Select option 0-3: ")
         except ValueError:
@@ -60,6 +64,7 @@ def product_menu():
             elif choice == 1:
                 os.system("cls")
                 print_products_db()
+                os.system("pause")
             elif choice == 2:
                 add_product_to_db()
             elif choice == 3:
@@ -94,6 +99,7 @@ def courier_menu():
                 break
             elif choice == 1:
                 print_couriers_db()
+                os.system("pause")
             elif choice == 2:
                 add_courier_to_db()
             elif choice == 3:
@@ -130,6 +136,7 @@ def orders_menu():
                 break
             elif choice == 1:
                 print_orders_func()
+                os.system("pause")
             elif choice == 2:
                 add_order_db()
             elif choice == 3:
@@ -164,13 +171,14 @@ def customer_menu():
                 os.system("cls")
                 break
             elif choice == 1:
-                print_couriers_db()
+                print_customers_db()
+                os.system("pause")
             elif choice == 2:
-                add_courier_to_db()
+                add_customer_db()
             elif choice == 3:
-                update_courier_in_db()
+                update_customer_in_db()
             elif choice == 4:
-                delete_courier_from_db()
+                delete_customer_from_db()
             else:
                 os.system("cls")
                 print("Incorrect input. Select option 0 - 4: ")

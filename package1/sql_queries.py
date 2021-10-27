@@ -25,10 +25,12 @@ UPDATE_ORDER_COURIER = 'UPDATE orders SET courier_id = %s WHERE order_id = %s'
 
 #CUSTOMERS
 GET_CUSTOMERID_FOR_ORDER_QUERY = 'SELECT customer_id FROM orders WHERE order_id = %s'
+GET_CUSTOMER_QUERY = 'SELECT * FROM customers'
 ADD_CUSTOMER_QUERY = 'INSERT INTO customers (customer_name, customer_address, customer_phone) VALUES(%s, %s, %s)'
 UPDATE_CUSTOMER_NAME_QUERY = 'UPDATE customers SET customer_name = %s WHERE customer_id = %s'
 UPDATE_CUSTOMER_ADDRESS_QUERY = 'UPDATE customers SET customer_address = %s WHERE customer_id = %s'
 UPDATE_CUSTOMER_PHONE_QUERY = 'UPDATE customers SET customer_phone = %s WHERE customer_id = %s'
+DELETE_CUSTOMER_QUERY = 'DELETE FROM customers WHERE customer_id = %s'
 
 #OTHER
 GET_ORDER_PRODUCTS_QUERY = 'SELECT order_products.product_id, products.name, order_products.quantity FROM order_products LEFT JOIN products ON order_products.product_id = products.product_id WHERE order_id = %s;'

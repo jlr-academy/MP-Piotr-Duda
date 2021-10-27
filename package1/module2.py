@@ -6,65 +6,128 @@ import pymysql
 from dotenv import load_dotenv
 from .sql_queries import *
 from .db_func import *
+from beautifultable import BeautifulTable
 
 def print_products_db():
     #done
 
     rows = sql_read(GET_PRODUCTS_QUERY)
 
+    print("PRODUCTS")
+
+    # for row in rows:
+    #     print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, stock: {row[3]}')
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "product", "price", "stock"]
+    
     for row in rows:
-        print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, stock: {row[3]}')
+        table.rows.append([row[0], row[1], row[2], row[3]])
+
+    print(table)
 
 
 def print_product_by_id(sql, val): 
     #done
     rows = sql_read(sql, val)
 
+    print(f"PRODUCT - ID:{val}")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "product", "price", "stock"]
+    
     for row in rows:
-        print(f'product_id: {row[0]}, product: {row[1]}, price: {row[2]}, stock: {row[3]}')
+        table.rows.append([row[0], row[1], row[2], row[3]])
+
+    print(table)
 
 def print_couriers_db(): 
     #done
     rows = sql_read(GET_COURIER_QUERY)
 
+    print("COURIERS")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "courier", "phone"]
+
     for row in rows:
-        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+        table.rows.append([row[0], row[1], row[2]])
+
+    print(table)
 
 def print_courier_by_id(sql, val): 
     #done
     rows = sql_read(sql, val)
 
+    print(f"COURIER ID:{val}")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "courier", "phone"]
+
     for row in rows:
-        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+        table.rows.append([row[0], row[1], row[2]])
+
+    print(table)
 
 def print_orders_db(): 
     #done
     rows = sql_read(GET_ORDER_QUERY)
+
+    print("ORDERS")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "cust_name", "address", "phone", "courier", "status", "qty"]
     for row in rows:
-        print(f'order_id: {row[0]} |customer: {row[1]}, {row[2]}, {row[3]} | courier: {row[4]} | status: {row[5]} | items: {row[6]}')
+        table.rows.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6]])
+
+    print(table)
 
 def print_order_by_id(id):
     #done
     rows = sql_read(GET_ORDER_QUERY)
 
+    print(f"ORDER ID:{id}")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "cust_name", "address", "phone", "courier", "status", "qty"]
+
     for row in rows:
         if row[0] == id:
-            print(f'order_id: {row[0]} |customer: {row[1]}, {row[2]}, {row[3]} | courier: {row[4]} | status: {row[5]} | items: {row[6]}')
+            table.rows.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6]])
+
+    print(table)
     
 def print_customers_db():
 
-    rows = sql_read(GET_COURIER_QUERY)
+    rows = sql_read(GET_CUSTOMER_QUERY)
+
+    print("CUSTOMERS")
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "name", "address", "phone"]
 
     for row in rows:
-        print(f'courier_id: {row[0]}, courier: {row[1]}, phone: {row[2]}')
+        table.rows.append([row[0], row[1], row[2], row[3]])
+
+    print(table)
 
 
 def print_list_products_by_id(id):
     #done
     rows = sql_read(GET_ORDER_PRODUCTS_QUERY, id)
 
+    print("""
+    *********************
+    PRODUCTS IN THIS ORDER
+    """)
+
+    table = BeautifulTable()
+    table.columns.header = ["id", "product", "qty"]
+
     for row in rows:
-        print(f'product id: {row[0]} | product name: {row[1]} | quantity: {row[2]}')
+        table.rows.append([row[0], row[1], row[2]])
+    
+    print(table)
 
 
 
