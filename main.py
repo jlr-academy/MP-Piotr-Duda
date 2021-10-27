@@ -2,14 +2,9 @@ import os
 from package1.module1 import *
 from package1.module2 import *
 
-# create a function for opening the file and return a list and use that for both files
-orders_list = []
-product_list = []
-courier_list = []
+
 
 def main_menu():
-
-    load_files(product_list, courier_list, orders_list)
 
     while True:
         os.system("cls")
@@ -27,7 +22,6 @@ def main_menu():
         try:
             choice = int(input("Select option 0-3: "))
             if choice == 0:
-                save_files(product_list, courier_list, orders_list)
                 break
             elif choice == 1:
                 os.system("cls")
@@ -37,7 +31,7 @@ def main_menu():
                 courier_menu()
             elif choice == 3:
                 os.system("cls")
-                orders_menu(product_list, courier_list, orders_list)
+                orders_menu()
             else:
                 print("Incorrect input. Select option 0-3: ")
         except ValueError:
@@ -65,7 +59,7 @@ def product_menu():
                 break
             elif choice == 1:
                 os.system("cls")
-                print_product_db()
+                print_products_db()
             elif choice == 2:
                 add_product_to_db()
             elif choice == 3:
@@ -99,7 +93,7 @@ def courier_menu():
                 os.system("cls")
                 break
             elif choice == 1:
-                print_courier_db()
+                print_couriers_db()
             elif choice == 2:
                 add_courier_to_db()
             elif choice == 3:
@@ -113,7 +107,7 @@ def courier_menu():
             os.system("cls")
             print("Incorrect input. Select option 0 - 4: ")
 
-def orders_menu(product_list, courier_list, orders_list):
+def orders_menu():
     while True:
         os.system("cls")
         print('''
@@ -135,7 +129,7 @@ def orders_menu(product_list, courier_list, orders_list):
                 os.system("cls")
                 break
             elif choice == 1:
-                print_order_func()
+                print_orders_func()
             elif choice == 2:
                 add_order_db()
             elif choice == 3:
@@ -149,6 +143,40 @@ def orders_menu(product_list, courier_list, orders_list):
                 print("Incorrect input. Select option 0-5: ")
         except ValueError:
             print("Incorrect input. Select option 0-5: ")
+
+def customer_menu():
+    while True:
+        print('''
+        *****************************
+        COURIER MENU
+        *****************************
+        0. Return to main menu
+        1. Print customer list
+        2. Create new customer
+        3. Update existing customer
+        4. Delete customer
+        *****************************
+        ''')
+
+        try:
+            choice = int(input("Select option 0 - 4: "))
+            if choice == 0:
+                os.system("cls")
+                break
+            elif choice == 1:
+                print_couriers_db()
+            elif choice == 2:
+                add_courier_to_db()
+            elif choice == 3:
+                update_courier_in_db()
+            elif choice == 4:
+                delete_courier_from_db()
+            else:
+                os.system("cls")
+                print("Incorrect input. Select option 0 - 4: ")
+        except ValueError:
+            os.system("cls")
+            print("Incorrect input. Select option 0 - 4: ")
 
 if __name__ == "__main__":
     main_menu()     
