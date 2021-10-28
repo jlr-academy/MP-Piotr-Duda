@@ -9,6 +9,7 @@ from .sql_queries import *
 
 def add_product_to_db():
  #function updated
+    os.system("cls")
     name=input("Enter name: ")
     is_duplicate = check_duplicates_in_db(GET_PRODUCT_NAME_QUERY, name)
 
@@ -93,6 +94,7 @@ def delete_product_from_db():
 
 def add_courier_to_db():
  #function updated
+    os.system("cls")
     name=input("Enter name: ")
     is_duplicate = check_duplicates_in_db(GET_COURIER_NAME_QUERY, name)
 
@@ -288,6 +290,7 @@ def add_customer_db():
     print("Customer has been created.")
 
 def update_customer_in_db():
+    os.system("cls")
     print_customers_db()
     customer_id = int(input("Enter ID: "))
     update_customer_name(customer_id)

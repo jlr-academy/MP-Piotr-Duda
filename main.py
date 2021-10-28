@@ -21,7 +21,7 @@ def main_menu():
         ''')
 
         try:
-            choice = int(input("Select option 0-3: "))
+            choice = int(input("Select option 0-4: "))
             if choice == 0:
                 break
             elif choice == 1:
@@ -44,6 +44,7 @@ def main_menu():
     
 def product_menu():
     while True:
+        os.system("cls")
         print('''
         *****************************
         PRODUCT MENU
@@ -80,6 +81,7 @@ def product_menu():
 
 def courier_menu():
     while True:
+        os.system("cls")
         print('''
         *****************************
         COURIER MENU
@@ -153,6 +155,7 @@ def orders_menu():
 
 def customer_menu():
     while True:
+        os.system("cls")
         print('''
         *****************************
         COURIER MENU
